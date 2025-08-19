@@ -21,3 +21,17 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    //const repository = new InMemoryPostRepository();
+    const repository = new PostgresPostRepository();
+    const posts = await repository.getAll();
+    return NextResponse.json(posts);
+  } catch {
+    return NextResponse.json(
+      { error: "Error al recuperar los datos" },
+      { status: 500 }
+    );
+  }
+}
