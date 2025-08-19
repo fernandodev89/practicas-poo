@@ -1,23 +1,51 @@
-import { NextResponse,NextRequest } from 'next/server';
+import postgres, { Sql } from "postgres";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(request: NextRequest) {
-	try {
-		const data = await request.json();
-		if (!data.title || !data.description || !data.autor) {
-			throw new Error("Falto un valor por asignar.");
-		}
+class PostgresUserRepository {
+  private readonly sql: Sql;
 
-		const conecc = 'postgresql://postgres.sbdqdhagfkjfevbhcclh:fernando8923@aws-1-us-east-2.pooler.supabase.com:5432/postgres' ;
+  constructor() {
+		const connectionString ='postgresql://postgres.sbdqdhagfkjfevbhcclh:fernando8923@aws-1-us-east-2.pooler.supabase.com:6543/postgres' ;
+    this.sql = postgres(connectionString);
+  }
 
-		return NextResponse.json({
-			message: 'Conexion exitosa a la base de datos',
-		})
-	} catch {
-		return NextResponse.json({
-			error: 'Failed to coneect to the database',
-		}, { status: 500 });		
-	}
+  async save(title: string, description: string, autor: string) {
+    try {
+      await this.sql`
+        INSERT INTO "Posts" (title, description, author) 
+        VALUES (${title}, ${description}, ${autor})
+      `;
+    } catch (err) {
+      console.error("Error al insertar en DB:", err);
+      throw new Error("Failed to save post");
+    }
+  }
+
+  
 }
 
+export async function POST(request: NextRequest) {
+  try {
+    const data = await request.json();
 
+    if (!data.title || !data.description || !data.autor) {
+      return NextResponse.json(
+        { error: "Faltan valores obligatorios." },
+        { status: 400 }
+      );
+    }
 
+    const repository = new PostgresUserRepository();
+    await repository.save(data.title, data.description, data.autor);
+
+    return NextResponse.json({
+      message: "Post guardado correctamente",
+      post: data,
+    });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err || "Error en la base de datos" },
+      { status: 500 }
+    );
+  }
+}
