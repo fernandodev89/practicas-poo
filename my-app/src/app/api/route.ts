@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
 
     const repository = new PostgresPostRepository();
-    const registrar = new PostRegistrar(repository, data.title, data.description, data.autor);
-    registrar.register();
+    const registrar = new PostRegistrar(repository);
+    registrar.registrar(data.title, data.description, data.autor);
     return NextResponse.json({
       message: "Post guardado correctamente",
       post: data,

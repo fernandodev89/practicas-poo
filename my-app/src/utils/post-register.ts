@@ -1,43 +1,16 @@
 import PostgresPostRepository from "./post-postgres-repository";
+import Post from "./post";
 
 export default class PostRegistrar {
 	private readonly repository: PostgresPostRepository;
-	private title: string;
-	private description: string;
-	private autor: string;
 
-	constructor(repository: PostgresPostRepository,title: string, description: string, autor: string) {
+	constructor(repository: PostgresPostRepository) {
 		this.repository = repository;
-		this.validarTitle(title);
-		this.title = title;
-		this.validarDescription(description);	
-		this.description = description;
-		this.validarAutor(autor);
-		this.autor = autor;
 	}
 
-	public async register(){
-		await this.repository.save(this.title, this.description, this.autor);
-	}
-
-	public validarTitle(title: string): void {
-		if(!title || title.length < 3) {
-			throw new Error("El título debe tener al menos más de 3 caracteres.");
-		}
-		
-	}
-
-	public validarDescription(descripcion: string): void {
-		if(!descripcion || descripcion.length < 3) {
-			throw new Error("La descripción debe tener al menos más de 3 caracteres.");
-		}
-		
-	}
-
-	public validarAutor(autor: string): void {
-		if(!autor || autor.length < 3) {
-			throw new Error("El autor debe tener al menos más de 3 caracteres.");
-		}
+	public async registrar(title: string, description: string, autor: string){
+		const post = Post.create(title, description, autor);
+		await this.repository.save(post);
 	}
 
 }

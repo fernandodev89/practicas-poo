@@ -1,4 +1,5 @@
 import postgres,{Sql} from "postgres";
+import Post from "./post";
 
 export default class PostgresPostRepository {
 	private sql: Sql;
@@ -8,8 +9,11 @@ export default class PostgresPostRepository {
 		this.sql = postgres(connectionString);
 	}
 
-	async save(title: string, description: string, autor: string) {
+	async save(post: Post) {
 	try {
+		const title = post.title.value;
+		const description = post.description.value;
+		const autor = post.autor.value;
 		await this.sql`
 			INSERT INTO "Posts" (title, description, author) 
 			VALUES (${title}, ${description}, ${autor})
