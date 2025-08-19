@@ -1,33 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import PostRegistrar from "@/utils/post-register";
-import postgres from "postgres";
+import PostgresPostRepository from "@/utils/post-postgres-repository";
 
-const connectionString = 'postgresql://postgres.sbdqdhagfkjfevbhcclh:fernando8923@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
-const sql = postgres(connectionString);
-
-async function guardarPost(title: string, description: string, autor: string) {
-try {
-  await sql`
-    INSERT INTO "Posts" (title, description, author) 
-    VALUES (${title}, ${description}, ${autor})
-  `;
-} catch (error) {
-  console.error(error);
-  throw new Error("Failed to save post");
-}
-}
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const postRegistrar = new PostRegistrar(data.title, data.description, data.autor);
-    await guardarPost(
-      postRegistrar.getTitle(),
-      postRegistrar.getDescription(),
-      postRegistrar.getAutor()
-    );
-
+    const repository = new PostgresPostRepository();
+    const registrar = new PostRegistrar(repository, data.title, data.description, data.autor);
+    registrar.register();
     return NextResponse.json({
       message: "Post guardado correctamente",
       post: data,

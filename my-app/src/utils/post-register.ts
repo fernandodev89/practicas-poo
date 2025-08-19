@@ -1,9 +1,13 @@
+import PostgresPostRepository from "./post-postgres-repository";
+
 export default class PostRegistrar {
+	private readonly repository: PostgresPostRepository;
 	private title: string;
 	private description: string;
 	private autor: string;
 
-	constructor(title: string, description: string, autor: string) {
+	constructor(repository: PostgresPostRepository,title: string, description: string, autor: string) {
+		this.repository = repository;
 		this.validarTitle(title);
 		this.title = title;
 		this.validarDescription(description);	
@@ -12,17 +16,8 @@ export default class PostRegistrar {
 		this.autor = autor;
 	}
 
-
-	public getTitle(): string {
-		return this.title;
-	}
-
-	public getDescription(): string {
-		return this.description;
-	}
-
-	public getAutor(): string {
-		return this.autor;
+	public async register(){
+		await this.repository.save(this.title, this.description, this.autor);
 	}
 
 	public validarTitle(title: string): void {
