@@ -8,7 +8,7 @@ export default class PostRegistrar {
 		this.repository = repository;
 	}
 
-	public async registrar(title: string, description: string, autor: string){
+	public async run(title: string, description: string, autor: string){
 		const post = Post.create(title, description, autor);
 		await this.repository.save(post);
 	}

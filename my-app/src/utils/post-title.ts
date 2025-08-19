@@ -7,8 +7,8 @@ export default class PostTitle{
 	}
 
 	public validarTitle(title: string): void {
-		if(!title || title.length < 3) {
-			throw new Error("El título debe tener al menos más de 3 caracteres.");
+		if(!title || title.length < 1) {
+			throw new Error("El título debe tener al menos más de 1 caracteres.");
 		}
 		
 	}
