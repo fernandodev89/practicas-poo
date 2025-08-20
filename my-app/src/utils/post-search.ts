@@ -1,16 +1,15 @@
 import PostRepository from "./post-repository";
 import Post from "./post";
 
-export default class PostRegistrar {
+export default class PostSearch {
 	private readonly repository: PostRepository;
 
 	constructor(repository: PostRepository) {
 		this.repository = repository;
 	}
 
-	public async run(title: string, description: string, autor: string){
-		const post = Post.create(title, description, autor);
-		await this.repository.save(post);
+	public async run():Promise<Post[]>{
+		return await this.repository.getAll();
 	}
 
 }
