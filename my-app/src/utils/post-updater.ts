@@ -1,7 +1,7 @@
 import PostRepository from "./post-repository";
 import Post from "./post";
 
-export default class PostUpdate {
+export default class PostUpdater {
 	private readonly repository: PostRepository;
 
 	constructor(repository: PostRepository) {

@@ -71,6 +71,12 @@ export default class PostgresPostRepository implements PostRepository {
 		}
 	}
 
-	
+	async delete(id: number): Promise<void> {
+		try {
+			await this.sql`DELETE FROM "Posts" WHERE id = ${id}`;
+		} catch {
+			throw new Error("Failed to delete post");
+		}
+	}
 
 }

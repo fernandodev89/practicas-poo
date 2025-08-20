@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import PostRegistrar from "@/utils/post-register";
 import PostgresPostRepository from "@/utils/post-postgres-repository";
-import PostSearch from "@/utils/post-search";
+import PostSearcher from "@/utils/post-searcher";
 //import InMemoryPostRepository from "@/utils/in-memory-post-repository";
 
 export async function POST(request: NextRequest) {
@@ -27,7 +27,7 @@ export async function GET() {
   try {
     //const repository = new InMemoryPostRepository();
     const repository = new PostgresPostRepository();
-    const posts = new PostSearch(repository);
+    const posts = new PostSearcher(repository);
     const data = await posts.run();
     return NextResponse.json(data);
   } catch {

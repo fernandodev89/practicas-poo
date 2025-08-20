@@ -1,7 +1,7 @@
 import PostRepository from "./post-repository";
 import Post from "./post";
 
-export default class PostSearch {
+export default class PostSearcher {
 	private readonly repository: PostRepository;
 
 	constructor(repository: PostRepository) {
